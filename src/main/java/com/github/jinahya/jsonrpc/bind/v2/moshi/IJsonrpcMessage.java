@@ -36,7 +36,7 @@ import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration
 import static java.util.Optional.ofNullable;
 
 interface IJsonrpcMessage<T extends IJsonrpcMessage<T>>
-        extends JsonrpcMessage, IJsonrpcObject {
+        extends JsonrpcMessage, IJsonrpcObject<T> {
 
     @Override
     default boolean hasId() {

@@ -22,7 +22,7 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
 
 import com.github.jinahya.jsonrpc.bind.v2.JsonrpcObject;
 
-interface IJsonrpcObject
+interface IJsonrpcObject<T extends IJsonrpcObject<T>>
         extends JsonrpcObject {
 
 }

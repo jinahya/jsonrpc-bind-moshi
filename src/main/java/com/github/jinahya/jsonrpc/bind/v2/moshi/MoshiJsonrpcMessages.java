@@ -69,7 +69,8 @@ public final class MoshiJsonrpcMessages {
     }
 
     @SuppressWarnings({"unchecked"})
-    public static <T extends IJsonrpcMessage> T fromJson(final Class<T> clazz, final Object source) throws IOException {
+    static <T extends IJsonrpcMessage<?>> T fromJson(final Class<T> clazz, final Object source)
+            throws IOException {
         assert clazz != null;
         assert source != null;
         final JsonAdapter<T> adapter = getMoshi().adapter(clazz);
@@ -128,7 +129,7 @@ public final class MoshiJsonrpcMessages {
         throw new JsonrpcBindException(new NoSuchMethodException("unable to find sink method for " + target));
     }
 
-    public static <T extends IJsonrpcMessage> void toJson(final Class<T> clazz, final Object target, final T value)
+    static <T extends IJsonrpcMessage<?>> void toJson(final Class<T> clazz, final Object target, final T value)
             throws IOException {
         assert clazz != null;
         assert target != null;

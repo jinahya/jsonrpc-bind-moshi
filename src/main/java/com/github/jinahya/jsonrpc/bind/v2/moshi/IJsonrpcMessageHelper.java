@@ -20,20 +20,7 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
  * #L%
  */
 
-import com.github.jinahya.jsonrpc.bind.JsonrpcBindException;
 import com.github.jinahya.jsonrpc.bind.v2.JsonrpcResponseMessageError;
-import com.squareup.moshi.JsonAdapter;
-import okio.Okio;
-import okio.Sink;
-import okio.Source;
-
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 import static com.github.jinahya.jsonrpc.bind.v2.JsonrpcMessage.PROPERTY_NAME_ID;
 import static com.github.jinahya.jsonrpc.bind.v2.JsonrpcRequestMessage.PROPERTY_NAME_PARAMS;
@@ -42,14 +29,8 @@ import static com.github.jinahya.jsonrpc.bind.v2.JsonrpcResponseMessage.PROPERTY
 import static com.github.jinahya.jsonrpc.bind.v2.JsonrpcResponseMessageError.PROPERTY_NAME_DATA;
 import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.get;
 import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.set;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
-import static java.util.Collections.synchronizedMap;
-import static java.util.Objects.requireNonNull;
-import static okio.Okio.buffer;
 
 final class IJsonrpcMessageHelper {
-
-    static final String PROPERTY_NAME_UNRECOGNIZED_PROPERTIES = "unrecognizedProperties";
 
     // -----------------------------------------------------------------------------------------------------------------
     static Object getId(final Class<?> clazz, final Object object) {
@@ -79,6 +60,7 @@ final class IJsonrpcMessageHelper {
     }
 
     // -----------------------------------------------------------------------------------------------------------------
+    @SuppressWarnings({"unchecked"})
     static <T extends JsonrpcResponseMessageError> T getResponseError(final Class<?> clazz, final Object object) {
         return (T) get(clazz, PROPERTY_NAME_ERROR, object);
     }

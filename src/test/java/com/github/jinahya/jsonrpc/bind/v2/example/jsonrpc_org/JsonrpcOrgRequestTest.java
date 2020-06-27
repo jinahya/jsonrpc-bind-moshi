@@ -27,13 +27,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.List;
 
 import static com.github.jinahya.jsonrpc.bind.v2.BeanValidationTests.requireValid;
 import static com.github.jinahya.jsonrpc.bind.v2.JsonrpcBindTests.acceptResourceStream;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
 import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcRequestMessage.fromJson;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -55,12 +53,7 @@ class JsonrpcOrgRequestTest {
         acceptResourceStream(
                 "e01_positional_parameters_01_request.json",
                 s -> {
-                    final MoshiJsonrpcRequestMessage message;
-                    try {
-                        message = fromJson(s);
-                    } catch (final IOException ioe) {
-                        throw new UncheckedIOException(ioe);
-                    }
+                    final MoshiJsonrpcRequestMessage message = fromJson(s);
                     log.debug("message: {}", message);
                     requireValid(message);
                     assertEquals("subtract", message.getMethod());

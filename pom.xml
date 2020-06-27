@@ -45,7 +45,6 @@
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <maven.compiler.testSource>${maven.compiler.source}</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
-    <version.com.fasterxml.jackson.core>2.11.0</version.com.fasterxml.jackson.core>
     <version.com.squareup.moshi>1.9.3</version.com.squareup.moshi>
     <version.jsonrpc-bind>0.7.1-SNAPSHOT</version.jsonrpc-bind>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
@@ -64,12 +63,6 @@
       <artifactId>logback-classic</artifactId>
       <version>1.2.3</version>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${version.com.fasterxml.jackson.core}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.squareup.moshi</groupId>
@@ -148,7 +141,7 @@
             </additionalJOptions>
             <links>
               <!--              <link>https://static.javadoc.io/com.github.jinahya/jsonrpc-bind/${version.jsonrpc-bind}</link>-->
-              <link>https://fasterxml.github.io/moshi-databind/javadoc/${version.com.fasterxml.moshi.core-databind-javadoc}</link>
+<!--              <link>https://fasterxml.github.io/moshi-databind/javadoc/${version.com.fasterxml.moshi.core-databind-javadoc}</link>-->
             </links>
             <offlineLinks>
               <offlineLink>
