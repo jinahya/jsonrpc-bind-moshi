@@ -22,7 +22,20 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
 
 import com.github.jinahya.jsonrpc.bind.v2.JsonrpcObject;
 
-interface IJsonrpcObject<T extends IJsonrpcObject<T>>
+import javax.validation.constraints.AssertTrue;
+
+import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
+
+interface IJsonrpcObject<S extends IJsonrpcObject<S>>
         extends JsonrpcObject {
 
+    @Override
+    default @AssertTrue boolean isContextuallyValid() {
+        return JsonrpcObject.super.isContextuallyValid();
+    }
+
+    @SuppressWarnings({"unchecked"})
+    default String toJson() {
+        return getMoshi().adapter((Class<S>) getClass()).toJson((S) this);
+    }
 }

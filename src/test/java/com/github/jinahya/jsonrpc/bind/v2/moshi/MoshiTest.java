@@ -33,8 +33,8 @@ class MoshiTest {
 
     @Test
     void test1() throws IOException {
-        final JsonAdapter<A> adapter = getMoshi().adapter(A.class);
         final String json = "{\"value1\":\"aaa\",\"value2\":1,\"value3\":[1,2],\"value4\":{\"name\":null,\"age\":10}}";
+        final JsonAdapter<A> adapter = getMoshi().adapter(A.class);
         final A a = adapter.fromJson(json);
         log.debug("a.value1: {} {}", a.value1, a.value1.getClass());
         log.debug("a.value2: {} {}", a.value2, a.value2.getClass());

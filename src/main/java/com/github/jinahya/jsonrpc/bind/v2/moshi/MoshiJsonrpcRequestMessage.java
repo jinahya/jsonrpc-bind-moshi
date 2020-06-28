@@ -1,6 +1,7 @@
 package com.github.jinahya.jsonrpc.bind.v2.moshi;
 
 import com.github.jinahya.jsonrpc.bind.v2.AbstractJsonrpcRequestMessage;
+import com.squareup.moshi.Json;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -33,7 +34,9 @@ public class MoshiJsonrpcRequestMessage
                + "}";
     }
 
+    @Json(name = PROPERTY_NAME_PARAMS)
     private Object params;
 
+    @Json(name = PROPERTY_NAME_ID)
     private Object id;
 }

@@ -20,9 +20,14 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
  * #L%
  */
 
+import com.squareup.moshi.JsonAdapter;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.BiFunction;
@@ -31,7 +36,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
+import static com.squareup.moshi.Types.newParameterizedType;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 
@@ -195,6 +203,43 @@ final class IJsonrpcObjectHelper {
             final Class<?> clazz, final Object object, final BiFunction<Class<?>, Object, ? extends V> getter,
             final Predicate<? super V> predicate) {
         return hasOneThenEvaluateOrGet(clazz, object, getter, predicate, SUPPLYING_FALSE);
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    static <V> List<V> hasOneThenMapAsArrayOrNull(final Class<?> clazz, final Object object,
+                                                  final BiFunction<Class<?>, Object, ?> getter,
+                                                  final Class<V> elementClass) {
+        return hasOneThenMapOrNull(
+                clazz,
+                object,
+                getter,
+                v -> {
+                    assert v != null;
+                    if (v instanceof List) {
+                        final ParameterizedType type = newParameterizedType(List.class, elementClass);
+                        final JsonAdapter<List<V>> adapter = getMoshi().adapter(type);
+                        return adapter.fromJsonValue(v);
+                    }
+                    return new ArrayList<>(singletonList(
+                            hasOneThenMapAsObjectOrNull(clazz, object, getter, elementClass)));
+                }
+        );
+    }
+
+    static <V> V hasOneThenMapAsObjectOrNull(final Class<?> clazz, final Object object,
+                                             final BiFunction<Class<?>, Object, ?> getter,
+                                             final Class<V> objectClass) {
+        assert objectClass != null;
+        return hasOneThenMapOrNull(
+                clazz,
+                object,
+                getter,
+                v -> {
+                    assert v != null;
+                    final JsonAdapter<V> adapter = getMoshi().adapter(objectClass);
+                    return adapter.fromJsonValue(v);
+                }
+        );
     }
 
     // -----------------------------------------------------------------------------------------------------------------

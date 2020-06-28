@@ -22,6 +22,8 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
 
 import com.squareup.moshi.Moshi;
 
+import java.math.BigInteger;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -31,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class MoshiJsonrpcConfiguration {
 
-    private static Moshi moshi = new Moshi.Builder().build();
+    private static Moshi moshi;
 
     /**
      * Returns current moshi instance.
@@ -47,8 +49,22 @@ public final class MoshiJsonrpcConfiguration {
      *
      * @param moshi new moshi instance.
      */
-    public static synchronized void setMoshi(final Moshi moshi) {
+    static synchronized void setMoshi(final Moshi moshi) {
         MoshiJsonrpcConfiguration.moshi = requireNonNull(moshi, "moshi is null");
+    }
+
+    /**
+     * Replaces current moshi instance with specified value.
+     *
+     * @param builder new moshi instance.
+     */
+    public static synchronized void setMoshi(final Moshi.Builder builder) {
+        builder.add(BigInteger.class, new BigIntegerAdapter());
+        setMoshi(builder.build());
+    }
+
+    static {
+        setMoshi(new Moshi.Builder());
     }
 
     private MoshiJsonrpcConfiguration() {

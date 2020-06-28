@@ -18,8 +18,9 @@ import static com.squareup.moshi.Types.newParameterizedType;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
-interface IJsonrpcRequestMessage<T extends IJsonrpcRequestMessage<T>>
-        extends IJsonrpcMessage<T>, JsonrpcRequestMessage {
+interface IJsonrpcRequestMessage<S extends IJsonrpcRequestMessage<S>>
+        extends IJsonrpcMessage<S>,
+                JsonrpcRequestMessage {
 
     @Override
     default boolean hasParams() {
@@ -40,8 +41,9 @@ interface IJsonrpcRequestMessage<T extends IJsonrpcRequestMessage<T>>
                 params -> {
                     assert params != null;
                     if (true) {
-                        // com.squareup.moshi.LinkedHashTreeMap
-                        return params instanceof List || params instanceof Map;
+                        return params instanceof List
+                               || params instanceof Map // com.squareup.moshi.LinkedHashTreeMap
+                                ;
                     }
                     // TODO: 6/28/2020 Keep thinking!!!
                     return true;

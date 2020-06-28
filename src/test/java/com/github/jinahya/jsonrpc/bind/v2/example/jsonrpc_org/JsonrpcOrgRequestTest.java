@@ -36,7 +36,9 @@ import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcRequestMessag
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Slf4j
@@ -79,73 +81,65 @@ class JsonrpcOrgRequestTest {
     }
 
     @Test
-    void w_e01_positional_parameters_01_request() throws IOException {
+    void w_e01_positional_parameters_01_request() {
         final MoshiJsonrpcRequestMessage message = new MoshiJsonrpcRequestMessage();
         message.setMethod("subtract");
         message.setParamsAsArray(asList(42, 23));
         message.setIdAsInteger(1);
-        log.debug("message: {}", message);
-        log.debug("json: {}", message.toString());
+        requireValid(message);
+        final String json = message.toJson();
+        log.debug("json: {}", json);
+        assertNotNull(json);
     }
-//
-//    // -----------------------------------------------------------------------------------------------------------------
-//    @Test
-//    void r_e01_positional_parameters_02_request() throws IOException {
-//        acceptResourceStream(
-//                "e01_positional_parameters_02_request.json",
-//                s -> {
-//                    final JacksonJsonrpcRequestMessage message;
-//                    try {
-//                        message = getObjectMapper().readValue(s, JacksonJsonrpcRequestMessage.class);
-//                    } catch (final IOException ioe) {
-//                        throw new UncheckedIOException(ioe);
-//                    }
-//                    log.debug("message: {}", message);
-//                    requireValid(message);
-//                    {
-//                        assertEquals("subtract", message.getMethod());
-//                    }
-//                    {
-//                        assertTrue(message.hasParams());
-//                        final List<Integer> params = message.getParamsAsArray(Integer.class);
-//                        assertIterableEquals(asList(23, 42), params);
-//                        {
-//                            final Integer[] array = message.getParamsAsObject(Integer[].class);
-//                            assertThat(array).isNotNull().containsSequence(23, 42);
-//                        }
-//                        {
-//                            final int[] array = message.getParamsAsObject(int[].class);
-//                            assertThat(array).isNotNull().containsSequence(23, 42);
-//                        }
-//                    }
-//                    {
-//                        assertTrue(message.hasId());
-//                        assertEquals("2", message.getIdAsString());
-//                        assertThat(message.getIdAsNumber()).isNotNull()
-//                                .isEqualByComparingTo(BigInteger.valueOf(2L));
-//                        assertThat(message.getIdAsLong()).isNotNull().isEqualTo(2L);
-//                        assertThat(message.getIdAsInteger()).isNotNull().isEqualTo(2);
-//                    }
-//                }
-//        );
-//    }
-//
-//    @Test
-//    void w_e01_positional_parameters_02_request() throws IOException {
-//        final JsonNode expected = applyResourceStream("e01_positional_parameters_02_request.json", s -> {
-//            try {
-//                return getObjectMapper().readTree(s);
-//            } catch (final IOException ioe) {
-//                throw new UncheckedIOException(ioe);
-//            }
-//        });
-//        final JacksonJsonrpcRequestMessage message = new JacksonJsonrpcRequestMessage();
-//        message.setMethod("subtract");
-//        message.setParamsAsObject(new int[] {23, 42});
-//        message.setIdAsInteger(2);
-//        final JsonNode actual = getObjectMapper().valueToTree(message);
-//        assertEquals(expected, actual);
-//    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    @Test
+    void r_e01_positional_parameters_02_request() throws IOException {
+        acceptResourceStream(
+                "e01_positional_parameters_02_request.json",
+                s -> {
+                    final MoshiJsonrpcRequestMessage message = fromJson(s);
+                    requireValid(message);
+                    {
+                        assertEquals("subtract", message.getMethod());
+                    }
+                    {
+                        assertTrue(message.hasParams());
+                        final List<Integer> params = message.getParamsAsArray(Integer.class);
+                        assertIterableEquals(asList(23, 42), params);
+                        {
+                            final Integer[] array = message.getParamsAsObject(Integer[].class);
+                            assertThat(array).isNotNull().containsSequence(23, 42);
+                        }
+                        {
+                            final int[] array = message.getParamsAsObject(int[].class);
+                            assertThat(array).isNotNull().containsSequence(23, 42);
+                        }
+                    }
+                    {
+                        assertFalse(message.isNotification());
+                        assertTrue(message.hasId());
+                        assertEquals("2", message.getIdAsString());
+                        assertThat(message.getIdAsNumber()).isNotNull()
+                                .isEqualByComparingTo(BigInteger.valueOf(2L));
+                        assertThat(message.getIdAsLong()).isNotNull().isEqualTo(2L);
+                        assertThat(message.getIdAsInteger()).isNotNull().isEqualTo(2);
+                    }
+                }
+        );
+    }
+
+    @Test
+    void w_e01_positional_parameters_02_request() {
+        final MoshiJsonrpcRequestMessage message = new MoshiJsonrpcRequestMessage();
+        message.setMethod("subtract");
+        message.setParamsAsObject(new int[] {23, 42});
+        message.setIdAsInteger(2);
+        log.debug("message: {}", message);
+        final String json = message.toJson();
+        log.debug("json: {}", json);
+        assertNotNull(json);
+    }
 //
 //    // -----------------------------------------------------------------------------------------------------------------
 //    @Test

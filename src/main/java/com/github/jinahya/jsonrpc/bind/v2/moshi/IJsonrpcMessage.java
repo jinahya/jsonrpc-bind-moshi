@@ -28,15 +28,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcMessageHelper.setId;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.evaluatingTrue;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenEvaluateOrFalse;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenEvaluateOrTrue;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenMapOrNull;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
+import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.*;
 import static java.util.Optional.ofNullable;
 
-interface IJsonrpcMessage<T extends IJsonrpcMessage<T>>
-        extends JsonrpcMessage, IJsonrpcObject<T> {
+interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
+        extends JsonrpcMessage, IJsonrpcObject<S> {
 
     @Override
     default boolean hasId() {
@@ -163,18 +159,6 @@ interface IJsonrpcMessage<T extends IJsonrpcMessage<T>>
     @Override
     default void setIdAsInteger(final Integer id) {
         setId(getClass(), this, id);
-    }
-
-    // -----------------------------------------------------------------------------------------------------------------
-
-    /**
-     * Returns a JSON representation of this message.
-     *
-     * @return a JSON representation of this message.
-     */
-    @SuppressWarnings({"unchecked"})
-    default String toJson() {
-        return getMoshi().adapter((Class<T>) getClass()).toJson((T) this);
     }
 }
 
