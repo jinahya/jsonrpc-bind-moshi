@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2.examples.jsonrpc_org;
 
 /*-
  * #%L
@@ -22,12 +22,7 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
 
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * A class for testing {@link MoshiJsonrpcRequestMessage} class.
- *
- * @author Jin Kwon &lt;onacit_at_wemakeprice.com&gt;
- */
 @Slf4j
-class MoshiJsonrpcRequestMessageTest {
+class MoshiJsonrpcOrgResponseTest extends JsonrpcOrgResponseTest {
 
 }

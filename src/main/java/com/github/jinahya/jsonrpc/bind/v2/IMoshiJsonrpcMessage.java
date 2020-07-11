@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 /*-
  * #%L
@@ -21,25 +21,24 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
  */
 
 import com.github.jinahya.jsonrpc.bind.JsonrpcBindException;
-import com.github.jinahya.jsonrpc.bind.v2.JsonrpcMessage;
 
 import javax.validation.constraints.AssertTrue;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcMessageHelper.setId;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.*;
+import static com.github.jinahya.jsonrpc.bind.v2.IMoshiJsonrpcMessageHelper.setId;
+import static com.github.jinahya.jsonrpc.bind.v2.IMoshiJsonrpcObjectHelper.*;
 import static java.util.Optional.ofNullable;
 
-interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
-        extends JsonrpcMessage, IJsonrpcObject<S> {
+interface IMoshiJsonrpcMessage<S extends IMoshiJsonrpcMessage<S>>
+        extends JsonrpcMessage, IMoshiJsonrpcObject<S> {
 
     @Override
     default boolean hasId() {
         return hasOneThenEvaluateOrFalse(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 evaluatingTrue()
         );
     }
@@ -49,14 +48,9 @@ interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
         return hasOneThenEvaluateOrTrue(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 id -> id instanceof CharSequence || id instanceof Number
         );
-    }
-
-    @Override
-    default boolean isNotification() {
-        return JsonrpcMessage.super.isNotification();
     }
 
     @Override
@@ -64,7 +58,7 @@ interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
         return hasOneThenMapOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 id -> {
                     assert id != null;
                     if (id instanceof Number) {
@@ -89,7 +83,7 @@ interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
         return hasOneThenMapOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 id -> {
                     if (id instanceof BigInteger) {
                         return (BigInteger) id;
@@ -120,7 +114,7 @@ interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
         return ofNullable(hasOneThenMapOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 id -> {
                     if (id instanceof Long) {
                         return (Long) id;
@@ -143,7 +137,7 @@ interface IJsonrpcMessage<S extends IJsonrpcMessage<S>>
         return ofNullable(hasOneThenMapOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getId,
+                IMoshiJsonrpcMessageHelper::getId,
                 id -> {
                     if (id instanceof Integer) {
                         return (Integer) id;

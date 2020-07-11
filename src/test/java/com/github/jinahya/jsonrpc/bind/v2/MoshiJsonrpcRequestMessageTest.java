@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 /*-
  * #%L
@@ -20,22 +20,17 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
  * #L%
  */
 
-import com.github.jinahya.jsonrpc.bind.v2.JsonrpcObject;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.validation.constraints.AssertTrue;
+/**
+ * A class for testing {@link MoshiJsonrpcRequestMessage} class.
+ *
+ * @author Jin Kwon &lt;onacit_at_wemakeprice.com&gt;
+ */
+@Slf4j
+class MoshiJsonrpcRequestMessageTest extends JsonrpcRequestMessageTest<MoshiJsonrpcRequestMessage> {
 
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
-
-interface IJsonrpcObject<S extends IJsonrpcObject<S>>
-        extends JsonrpcObject {
-
-    @Override
-    default @AssertTrue boolean isContextuallyValid() {
-        return JsonrpcObject.super.isContextuallyValid();
-    }
-
-    @SuppressWarnings({"unchecked"})
-    default String toJson() {
-        return getMoshi().adapter((Class<S>) getClass()).toJson((S) this);
+    MoshiJsonrpcRequestMessageTest() {
+        super(MoshiJsonrpcRequestMessage.class);
     }
 }

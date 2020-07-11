@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 import com.squareup.moshi.FromJson;
 import com.squareup.moshi.JsonAdapter;

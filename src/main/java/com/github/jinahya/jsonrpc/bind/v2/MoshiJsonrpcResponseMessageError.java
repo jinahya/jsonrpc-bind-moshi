@@ -1,7 +1,5 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
-import com.github.jinahya.jsonrpc.bind.v2.AbstractJsonrpcResponseMessageError;
-import com.github.jinahya.jsonrpc.bind.v2.JsonrpcResponseMessageError;
 import com.squareup.moshi.Json;
 
 public class MoshiJsonrpcResponseMessageError

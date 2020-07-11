@@ -47,23 +47,14 @@
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <version.com.squareup.moshi>1.9.3</version.com.squareup.moshi>
     <version.jsonrpc-bind>0.7.1-SNAPSHOT</version.jsonrpc-bind>
+    <version.jsonrpc-bind-tests>${version.jsonrpc-bind}</version.jsonrpc-bind-tests>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
     <version.maven-javadoc-plugin>3.2.0</version.maven-javadoc-plugin>
     <version.maven-surefire>3.0.0-M4</version.maven-surefire>
     <version.org.junit.jupiter>5.6.2</version.org.junit.jupiter>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.2.3</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.squareup.moshi</groupId>
       <artifactId>moshi</artifactId>
@@ -78,47 +69,15 @@
     </dependency>
     <dependency>
       <groupId>com.github.jinahya</groupId>
-      <artifactId>jsonrpc-bind</artifactId>
-      <version>${version.jsonrpc-bind}</version>
-      <scope>test</scope>
-      <classifier>tests</classifier>
-      <type>test-jar</type>
+      <artifactId>jsonrpc-bind-tests</artifactId>
+      <version>${version.jsonrpc-bind-tests}</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
       <version>2.0.1.Final</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.16.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>6.1.0.Alpha5</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${version.org.junit.jupiter}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${version.org.junit.jupiter}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${version.org.junit.jupiter}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -141,7 +100,7 @@
             </additionalJOptions>
             <links>
               <!--              <link>https://static.javadoc.io/com.github.jinahya/jsonrpc-bind/${version.jsonrpc-bind}</link>-->
-<!--              <link>https://fasterxml.github.io/moshi-databind/javadoc/${version.com.fasterxml.moshi.core-databind-javadoc}</link>-->
+              <!--              <link>https://fasterxml.github.io/moshi-databind/javadoc/${version.com.fasterxml.moshi.core-databind-javadoc}</link>-->
             </links>
             <offlineLinks>
               <offlineLink>

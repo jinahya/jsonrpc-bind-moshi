@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 /*-
  * #%L
@@ -27,17 +27,18 @@ import okio.Sink;
 import okio.Source;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
+import static com.github.jinahya.jsonrpc.bind.v2.MoshiJsonrpcConfiguration.getMoshi;
 import static okio.Okio.buffer;
 
-public final class MoshiJsonrpcMessages {
+public final class MoshiJsonrpcMessageServiceHelper {
 
-    static Source source(final Object source) throws IOException {
+    // -----------------------------------------------------------------------------------------------------------------
+    static Source source(final Object source) {
         assert source != null;
+        final Class<?> sourceClass = source.getClass();
         for (final Method method : Okio.class.getMethods()) {
             final int modifiers = method.getModifiers();
             if (!Modifier.isStatic(modifiers)) {
@@ -50,29 +51,23 @@ public final class MoshiJsonrpcMessages {
             if (parameterTypes.length != 1) {
                 continue;
             }
-            if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+            if (!parameterTypes[0].isAssignableFrom(sourceClass)) {
                 continue;
             }
             try {
                 return (Source) method.invoke(null, source);
             } catch (final ReflectiveOperationException roe) {
-                if (roe instanceof InvocationTargetException) {
-                    final Throwable cause = roe.getCause();
-                    if (cause instanceof IOException) {
-                        throw (IOException) cause;
-                    }
-                }
                 throw new JsonrpcBindException(roe);
             }
         }
-        throw new JsonrpcBindException(new NoSuchMethodException("unable to find source method for " + source));
+        throw new JsonrpcBindException("unable to find source method for " + sourceClass);
     }
 
     @SuppressWarnings({"unchecked"})
-    static <T extends IJsonrpcMessage<?>> T fromJson(final Class<T> clazz, final Object source)
-            throws IOException {
+    static <T extends JsonrpcMessage> T fromJson(final Class<T> clazz, final Object source) {
         assert clazz != null;
         assert source != null;
+        final Class<?> sourceClass = source.getClass();
         final JsonAdapter<T> adapter = getMoshi().adapter(clazz);
         for (final Method method : JsonAdapter.class.getMethods()) {
             if (!"fromJson".equals(method.getName())) {
@@ -82,7 +77,7 @@ public final class MoshiJsonrpcMessages {
             if (parameterTypes.length != 1) {
                 continue;
             }
-            if (!parameterTypes[0].isAssignableFrom(source.getClass())) {
+            if (!parameterTypes[0].isAssignableFrom(sourceClass)) {
                 continue;
             }
             if (!method.isAccessible()) {
@@ -91,20 +86,20 @@ public final class MoshiJsonrpcMessages {
             try {
                 return (T) method.invoke(adapter, source);
             } catch (final ReflectiveOperationException roe) {
-                if (roe instanceof InvocationTargetException) {
-                    final Throwable cause = roe.getCause();
-                    if (cause instanceof IOException) {
-                        throw (IOException) cause;
-                    }
-                }
                 throw new JsonrpcBindException(roe);
             }
         }
-        return adapter.fromJson(buffer(source(source)));
+        try {
+            return adapter.fromJson(buffer(source(source)));
+        } catch (final IOException ioe) {
+            throw new JsonrpcBindException(ioe);
+        }
     }
 
+    // -----------------------------------------------------------------------------------------------------------------
     static Sink sink(final Object target) {
         assert target != null;
+        final Class<?> targetClass = target.getClass();
         for (final Method method : Okio.class.getMethods()) {
             final int modifiers = method.getModifiers();
             if (!Modifier.isStatic(modifiers)) {
@@ -117,7 +112,7 @@ public final class MoshiJsonrpcMessages {
             if (parameterTypes.length != 1) {
                 continue;
             }
-            if (!parameterTypes[0].isAssignableFrom(target.getClass())) {
+            if (!parameterTypes[0].isAssignableFrom(targetClass)) {
                 continue;
             }
             try {
@@ -126,14 +121,14 @@ public final class MoshiJsonrpcMessages {
                 throw new JsonrpcBindException(roe);
             }
         }
-        throw new JsonrpcBindException(new NoSuchMethodException("unable to find sink method for " + target));
+        throw new JsonrpcBindException("unable to find sink method for " + targetClass);
     }
 
-    static <T extends IJsonrpcMessage<?>> void toJson(final Class<T> clazz, final Object target, final T value)
-            throws IOException {
+    static <T extends JsonrpcMessage> void toJson(final Class<T> clazz, final Object target, final T value) {
         assert clazz != null;
         assert target != null;
         assert value != null;
+        final Class<?> targetClass = target.getClass();
         final JsonAdapter<T> adapter = getMoshi().adapter(clazz);
         for (final Method method : JsonAdapter.class.getMethods()) {
             if (!"toJson".equals(method.getName())) {
@@ -143,7 +138,7 @@ public final class MoshiJsonrpcMessages {
             if (parameterTypes.length < 2) {
                 continue;
             }
-            if (!parameterTypes[0].isAssignableFrom(target.getClass())) {
+            if (!parameterTypes[0].isAssignableFrom(targetClass)) {
                 continue;
             }
             if (!method.isAccessible()) {
@@ -151,21 +146,20 @@ public final class MoshiJsonrpcMessages {
             }
             try {
                 method.invoke(adapter, target, value);
+                return;
             } catch (final ReflectiveOperationException roe) {
-                if (roe instanceof InvocationTargetException) {
-                    final Throwable cause = roe.getCause();
-                    if (cause instanceof IOException) {
-                        throw (IOException) cause;
-                    }
-                }
                 throw new JsonrpcBindException(roe);
             }
         }
-        adapter.toJson(buffer(sink(target)), value);
+        try {
+            adapter.toJson(buffer(sink(target)), value);
+        } catch (final IOException ioe) {
+            throw new JsonrpcBindException(ioe);
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private MoshiJsonrpcMessages() {
+    private MoshiJsonrpcMessageServiceHelper() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

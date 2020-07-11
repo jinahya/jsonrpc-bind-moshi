@@ -1,4 +1,4 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 /*-
  * #%L
@@ -23,6 +23,7 @@ package com.github.jinahya.jsonrpc.bind.v2.moshi;
 import com.squareup.moshi.JsonAdapter;
 
 import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -36,14 +37,31 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.MoshiJsonrpcConfiguration.getMoshi;
 import static com.squareup.moshi.Types.newParameterizedType;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.singletonList;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Objects.requireNonNull;
 
-final class IJsonrpcObjectHelper {
+final class IMoshiJsonrpcObjectHelper {
+
+    @SuppressWarnings({"unchecked"})
+    public static <T> Class<T> wrap(final Class<T> clazz) {
+        requireNonNull(clazz, "clazz is null");
+        if (!clazz.isPrimitive()) {
+            return clazz;
+        }
+        return (Class<T>) MethodType.methodType(clazz).wrap().returnType();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> unwrap(final Class<T> clazz) {
+        requireNonNull(clazz, "clazz is null");
+        if (clazz.isPrimitive()) {
+            return clazz;
+        }
+        return (Class<T>) MethodType.methodType(clazz).unwrap().returnType();
+    }
 
     static final Supplier<?> SUPPLYING_NULL = () -> null;
 
@@ -217,7 +235,7 @@ final class IJsonrpcObjectHelper {
                     assert v != null;
                     if (v instanceof List) {
                         final ParameterizedType type = newParameterizedType(List.class, elementClass);
-                        final JsonAdapter<List<V>> adapter = getMoshi().adapter(type);
+                        final JsonAdapter<List<V>> adapter = MoshiJsonrpcConfiguration.getMoshi().adapter(type);
                         return adapter.fromJsonValue(v);
                     }
                     return new ArrayList<>(singletonList(
@@ -236,14 +254,14 @@ final class IJsonrpcObjectHelper {
                 getter,
                 v -> {
                     assert v != null;
-                    final JsonAdapter<V> adapter = getMoshi().adapter(objectClass);
+                    final JsonAdapter<V> adapter = MoshiJsonrpcConfiguration.getMoshi().adapter(objectClass);
                     return adapter.fromJsonValue(v);
                 }
         );
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    private IJsonrpcObjectHelper() {
+    private IMoshiJsonrpcObjectHelper() {
         throw new AssertionError("instantiation is not allowed");
     }
 }

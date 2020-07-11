@@ -1,29 +1,22 @@
-package com.github.jinahya.jsonrpc.bind.v2.moshi;
-
-import com.github.jinahya.jsonrpc.bind.v2.JsonrpcResponseMessageError;
+package com.github.jinahya.jsonrpc.bind.v2;
 
 import javax.validation.constraints.AssertTrue;
 import java.util.List;
 
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcMessageHelper.setResponseErrorData;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.evaluatingTrue;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenEvaluateOrTrue;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenMapAsArrayOrNull;
-import static com.github.jinahya.jsonrpc.bind.v2.moshi.IJsonrpcObjectHelper.hasOneThenMapAsObjectOrNull;
 import static java.util.Objects.requireNonNull;
 
 // TODO: Move implementations to the concrete class!!!
 interface IJsonrpcResponseMessageError<S extends IJsonrpcResponseMessageError<S>>
-        extends IJsonrpcObject<S>,
+        extends IMoshiJsonrpcObject<S>,
                 JsonrpcResponseMessageError {
 
     @Override
     default boolean hasData() {
-        return hasOneThenEvaluateOrTrue(
+        return IMoshiJsonrpcObjectHelper.hasOneThenEvaluateOrTrue(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getResponseErrorData,
-                evaluatingTrue()
+                IMoshiJsonrpcMessageHelper::getResponseErrorData,
+                IMoshiJsonrpcObjectHelper.evaluatingTrue()
         );
     }
 
@@ -36,32 +29,32 @@ interface IJsonrpcResponseMessageError<S extends IJsonrpcResponseMessageError<S>
     @Override
     default <T> List<T> getDataAsArray(final Class<T> elementClass) {
         requireNonNull(elementClass, "elementClass is null");
-        return hasOneThenMapAsArrayOrNull(
+        return IMoshiJsonrpcObjectHelper.hasOneThenMapAsArrayOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getResponseErrorData,
+                IMoshiJsonrpcMessageHelper::getResponseErrorData,
                 elementClass
         );
     }
 
     @Override
     default void setDataAsArray(final List<?> data) {
-        setResponseErrorData(getClass(), this, data);
+        IMoshiJsonrpcMessageHelper.setResponseErrorData(getClass(), this, data);
     }
 
     @Override
     default <T> T getDataAsObject(final Class<T> objectClass) {
         requireNonNull(objectClass, "objectClass is null");
-        return hasOneThenMapAsObjectOrNull(
+        return IMoshiJsonrpcObjectHelper.hasOneThenMapAsObjectOrNull(
                 getClass(),
                 this,
-                IJsonrpcMessageHelper::getResponseErrorData,
+                IMoshiJsonrpcMessageHelper::getResponseErrorData,
                 objectClass
         );
     }
 
     @Override
     default void setDataAsObject(final Object data) {
-        setResponseErrorData(getClass(), this, data);
+        IMoshiJsonrpcMessageHelper.setResponseErrorData(getClass(), this, data);
     }
 }
