@@ -2,7 +2,7 @@ package com.github.jinahya.jsonrpc.bind.v2;
 
 /*-
  * #%L
- * jsonrpc-bind-jackson
+ * jsonrpc-bind-moshi
  * %%
  * Copyright (C) 2019 - 2020 Jinahya, Inc.
  * %%
@@ -20,8 +20,9 @@ package com.github.jinahya.jsonrpc.bind.v2;
  * #L%
  */
 
-interface IMoshiJsonrpcMessage<S extends IMoshiJsonrpcMessage<S>>
-        extends JsonrpcMessage, IMoshiJsonrpcObject<S> {
+// TODO: Move implementations to the concrete class!!!
+interface IMoshiJsonrpcResponseMessageError<S extends IMoshiJsonrpcResponseMessageError<S>>
+        extends IMoshiJsonrpcObject<S>,
+                JsonrpcResponseMessageError {
 
 }
-
